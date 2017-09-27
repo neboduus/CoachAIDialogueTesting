@@ -1,0 +1,425 @@
+topic: ~mental keep repeat []
+
+u: INTRO ($mental=0 * ~next *)
+	Ciao! Sono un assistente personale e ora ti farò ora alcune domande sul tuo benessere! Iniziamo? 
+	$mental=1
+	$_responses = ^jsoncreate(array)
+    ^jsonarrayinsert($_responses "Avanti ")
+    $USER.buttons = $_responses
+	
+
+u: CONCENTRATED ($mental=1 * avanti *)
+	Riesci a rimanere concentrato su ciò che stai facendo (ad esempio al lavoro o mentre leggi qualcosa)?
+
+	$_responses = ^jsoncreate(array)
+    ^jsonarrayinsert($_responses "Spesso ")
+    ^jsonarrayinsert($_responses "Solo occasionalmente ")
+    ^jsonarrayinsert($_responses "Quasi mai ")
+    ^jsonarrayinsert($_responses "Non voglio rispondere ")
+    $USER.buttons = $_responses
+	$mental=2
+
+u: ($mental=2 * spesso *)
+	$mental=3
+	^reuse(LOOSE_SLEEP)
+
+u: ($mental=2 * occasionalmente * )
+	$mental=3
+	$score2 += 1
+	^reuse(LOOSE_SLEEP)
+
+u: ($mental=2 * quasi mai *)
+	$mental=3
+	$score2 += 2
+	^reuse(LOOSE_SLEEP)
+
+u: ($mental=2 * non voglio rispondere *)
+	$mental=3
+	^reuse(LOOSE_SLEEP)
+
+u: LOOSE_SLEEP ($mental=3)
+	Ti capita di perdere molto sonno tanto da preoccuparsi?
+
+	$_responses = ^jsoncreate(array)
+    ^jsonarrayinsert($_responses "Ultimamente si ")
+    ^jsonarrayinsert($_responses "Solo qualche giorno ")
+    ^jsonarrayinsert($_responses "Mai o quasi mai ")
+    ^jsonarrayinsert($_responses "Preferisco non rispondere ")
+    $USER.buttons = $_responses
+	$mental=4
+
+u: ($mental=4 * ultimamente *)
+	$mental=5
+	$score2 += 2
+	^reuse(PRODUCTIVE)
+
+u: ($mental=4 * solo qualche giorno *)
+	$mental=5
+	$score2 += 1
+	^reuse(PRODUCTIVE)
+
+u: ($mental=4 * mai *)
+	$mental=5
+	^reuse(PRODUCTIVE)
+
+u: ($mental=4 * preferisco non rispondere *)
+	$mental=5
+	^reuse(PRODUCTIVE)
+
+
+u: PRODUCTIVE ($mental=5)
+	Ti senti produttivo nella maggior parte delle tue attività giornaliere?
+
+	$_responses = ^jsoncreate(array)
+    ^jsonarrayinsert($_responses "Mi sento molto produttivo ")
+    ^jsonarrayinsert($_responses "Nella norma ")
+    ^jsonarrayinsert($_responses "Meno produttivo del solito ")
+    ^jsonarrayinsert($_responses "Non voglio rispondere ")
+    $USER.buttons = $_responses
+	$mental=6
+
+u: ($mental=6 * mi sento molto produttivo *)
+	$mental=7
+	^reuse(DECISIONS)
+
+u: ($mental=6 * nella norma *)
+	$mental=7
+	$score2 += 1
+	^reuse(DECISIONS)
+
+u: ($mental=6 * meno produttivo del solito *)
+	$mental=7
+	$score2 += 2
+	^reuse(DECISIONS)
+
+u: ($mental=6 * non voglio rispondere *)
+	$mental=7
+	^reuse(DECISIONS)
+
+
+u: DECISIONS ($mental=7)
+	Nella maggior parte dei casi ti senti in grado di prendere decisioni?
+
+	$_responses = ^jsoncreate(array)
+    ^jsonarrayinsert($_responses "Sempre ")
+    ^jsonarrayinsert($_responses "Abbastanza ")
+    ^jsonarrayinsert($_responses "Poche volte ")
+    ^jsonarrayinsert($_responses "Non lo so ")
+    $USER.buttons = $_responses
+	$mental=8
+
+u: ($mental=8 * sempre *)
+	$mental=9
+	^reuse(PRESSION)
+
+u: ($mental=8 * abbastanza *)
+	$mental=9
+	$score2 += 1
+	^reuse(PRESSION)
+
+u: ($mental=8 * poche volte *)
+	$mental=9
+	$score2 += 2
+	^reuse(PRESSION)
+
+u: ($mental=8 * non lo so *)
+	$mental=9
+	^reuse(PRESSION)
+
+
+u: PRESSION ($mental=9)
+	Ultimamente quanto spesso di senti sotto pressione?
+
+	$_responses = ^jsoncreate(array)
+    ^jsonarrayinsert($_responses "Spesso ")
+    ^jsonarrayinsert($_responses "Qualche volta ")
+    ^jsonarrayinsert($_responses "Quasi mai ")
+    ^jsonarrayinsert($_responses "Preferisco non rispondere ")
+    $USER.buttons = $_responses
+	$mental=10
+
+u: ($mental=10 * spesso *)
+	$mental=11
+	$score2 += 2
+	^reuse(DIFFICULTIES)
+
+u: ($mental=10 * qualche volta *)
+	$mental=11
+	$score2 += 1
+	^reuse(DIFFICULTIES)
+
+u: ($mental=10 * quasi mai *)
+	$mental=11
+	^reuse(DIFFICULTIES)
+
+u: ($mental=10 * preferisco non rispondere *)
+	$mental=11
+	^reuse(DIFFICULTIES)
+
+
+u: DIFFICULTIES ($mental=11)
+	Ti capita di non sentirti in grado di superare le difficoltà?
+
+	$_responses = ^jsoncreate(array)
+    ^jsonarrayinsert($_responses "Spesso ")
+    ^jsonarrayinsert($_responses "Qualche volta ")
+    ^jsonarrayinsert($_responses "Solo raramente ")
+    ^jsonarrayinsert($_responses "Non voglio rispondere ")
+    $USER.buttons = $_responses
+	$mental=12
+
+u: ($mental=12 * spesso *)
+	$mental=13
+	^reuse(FREE_TIME)
+
+u: ($mental=12 * qualche volta *)
+	$mental=13
+	$score2 += 1
+	^reuse(FREE_TIME)
+
+u: ($mental=12 * raramente *)
+	$mental=13
+	$score2 += 2
+	^reuse(FREE_TIME)
+
+u: ($mental=12 * non voglio rispondere *)
+	$mental=13
+	^reuse(FREE_TIME)
+
+
+u: FREE_TIME ($mental=13)
+	Riesci a ritagliarti del tempo libero e a goderne?
+
+	$_responses = ^jsoncreate(array)
+    ^jsonarrayinsert($_responses "Spesso ")
+    ^jsonarrayinsert($_responses "Solo qualche volta ")
+    ^jsonarrayinsert($_responses "Quasi mai ")
+    ^jsonarrayinsert($_responses "Non lo so ")
+    $USER.buttons = $_responses
+	$mental=14
+
+u: ($mental=14 * spesso *)
+	$mental=15
+	^reuse(SOLVE_PROBLEMS)
+
+u: ($mental=14 * qualche volta *)
+	$mental=15
+	$score2 += 1
+	^reuse(SOLVE_PROBLEMS)
+
+u: ($mental=14 * quasi mai *)
+	$mental=15
+	$score2 += 2
+	^reuse(SOLVE_PROBLEMS)
+
+u: ($mental=14 * non lo so *)
+	$mental=15
+	^reuse(SOLVE_PROBLEMS)
+
+
+u: SOLVE_PROBLEMS ($mental=15)
+	Ti senti in grado di risolvere i problemi che ti si pongono?
+
+	$_responses = ^jsoncreate(array)
+    ^jsonarrayinsert($_responses "Sempre ")
+    ^jsonarrayinsert($_responses "Qualche volta ")
+    ^jsonarrayinsert($_responses "Raramente ")
+    ^jsonarrayinsert($_responses "Preferisco non rispondere ")
+    $USER.buttons = $_responses
+	$mental=16
+
+u: ($mental=16 * sempre *)
+	$mental=17
+	^reuse(DEPRESSION)
+
+u: ($mental=16 * qualche volta *)
+	$mental=17
+	$score2 += 1
+	^reuse(DEPRESSION)
+
+u: ($mental=16 * raramente *)
+	$mental=17
+	$score2 += 2
+	^reuse(DEPRESSION)
+
+u: ($mental=16 * preferisco non rispondere *)
+	$mental=17
+	^reuse(DEPRESSION)
+
+u: DEPRESSION ($mental=17)
+	Ultimamente ti senti infelice o depresso?
+
+	$_responses = ^jsoncreate(array)
+    ^jsonarrayinsert($_responses "Più triste del solito ")
+    ^jsonarrayinsert($_responses "Nè felice nè triste ")
+    ^jsonarrayinsert($_responses "Più felice del solito ")
+    ^jsonarrayinsert($_responses "Non voglio rispondere ")
+    $USER.buttons = $_responses
+	$mental=18
+
+u: ($mental=18 * triste del solito *)
+	$mental=19
+	$score2 += 2
+	^reuse(FAITH)
+
+u: ($mental=18 * felice * triste *)
+	$mental=19
+	$score2 += 1
+	^reuse(FAITH)
+
+u: ($mental=18 * felice del solito *)
+	$mental=19
+	^reuse(FAITH)
+
+u: ($mental=18 * non voglio rispondere *)
+	$mental=19
+	^reuse(FAITH)
+
+
+u: FAITH ($mental=19)
+	Ti capita di sentirti come se avessi perso la fiducia in se stesso? 
+
+	$_responses = ^jsoncreate(array)
+    ^jsonarrayinsert($_responses "No mai ")
+    ^jsonarrayinsert($_responses "A volte ")
+    ^jsonarrayinsert($_responses "Molto spesso ")
+    ^jsonarrayinsert($_responses "Non lo so ")
+    $USER.buttons = $_responses
+	$mental=20
+
+u: ($mental=20 * mai *)
+	$mental=21
+	^reuse(ESTEEM)
+
+u: ($mental=20 * a volte *)
+	$mental=21
+	$score2 += 1
+	^reuse(ESTEEM)
+
+u: ($mental=20 * molto spesso *)
+	$mental=21
+	$score2 += 2
+	^reuse(ESTEEM)
+
+u: ($mental=20 * non lo so *)
+	$mental=21
+	^reuse(ESTEEM)
+
+u: ESTEEM ($mental=21)
+	Ultimamente ti senti come se avessi meno stima di te?
+
+	$_responses = ^jsoncreate(array)
+    ^jsonarrayinsert($_responses "Per niente ")
+    ^jsonarrayinsert($_responses "Solo qualche volta ")
+    ^jsonarrayinsert($_responses "Spesso ")
+    ^jsonarrayinsert($_responses "Non voglio rispondere ")
+    $USER.buttons = $_responses
+	$mental=22
+
+u: ($mental=22 * per niente *)
+	$mental=23
+	^reuse(HAPPINESS)
+
+u: ($mental=22 * qualche volta *)
+	$mental=23
+	$score2 += 1
+	^reuse(HAPPINESS)
+
+u: ($mental=22 * spesso *)
+	$mental=23
+	$score2 += 2
+	^reuse(HAPPINESS)
+
+u: ($mental=22 * non voglio rispondere *)
+	$mental=23
+	^reuse(HAPPINESS)
+
+u: HAPPINESS ($mental=23)
+	Complessivamente ti definiresti con uno stato emotivo nel complesso felice?
+
+	$_responses = ^jsoncreate(array)
+    ^jsonarrayinsert($_responses "Certamente ")
+    ^jsonarrayinsert($_responses "Solo mediamente ")
+    ^jsonarrayinsert($_responses "Per niente ")
+    ^jsonarrayinsert($_responses "Preferisco non rispondere ")
+    $USER.buttons = $_responses
+	$mental=24
+
+u: ($mental=24 * Certamente *)
+	$mental=25
+	^reuse(FINISH_MENTAL)
+
+u: ($mental=24 * mediamente *)
+	$mental=25
+	$score2 += 1
+	^reuse(FINISH_MENTAL)
+
+u: ($mental=24 * per niente *)
+	$mental=25
+	$score2 += 2
+	^reuse(FINISH_MENTAL)
+
+u: ($mental=24 * preferisco non rispondere *)
+	$mental=25
+	^reuse(FINISH_MENTAL)
+
+
+u: FINISH_MENTAL ($mental=25)
+	# set that topic was completed
+	Grazie delle informazioni. Ora ti presenteremo i risultati del questionario sul tuo stato di benessere.
+
+	$_responses = ^jsoncreate(array)
+    ^jsonarrayinsert($_responses "Mostra Risultati ")
+
+    $USER.buttons = $_responses	
+    $mental=26
+
+
+u: ($mental=26 * mostra risultati *)
+	^respond(~mental_conclusion)
+	
+
+u: DEFAULT()
+	# check user state
+	if ($mental==1){
+		$mental=0
+		^reuse(INTRO)
+	}else if($mental==2){
+		$mental=1
+		^reuse(CONCENTRATED)
+	}else if($mental==4){
+		$mental=3
+		^reuse(LOOSE_SLEEP)
+	}else if($mental==6){
+		$mental=5
+		^reuse(PRODUCTIVE)
+	}else if($mental==8){
+		$mental=7
+		^reuse(DECISIONS)
+	}else if($mental==10){
+		$mental=9
+		^reuse(PRESSION)
+	}else if($mental==12){
+		$mental=11
+		^reuse(DIFFICULTIES)
+	}else if($mental==14){
+		$mental=13
+		^reuse(FREE_TIME)
+	}else if($mental==16){
+		$mental=15
+		^reuse(SOLVE_PROBLEMS)
+	}else if($mental==18){
+		$mental=17
+		^reuse(DEPRESSION)
+	}else if($mental==20){
+		$mental=19
+		^reuse(FAITH)
+	}else if($mental==22){
+		$mental=21
+		^reuse(ESTEEM)
+	}else if($mental==24){
+		$mental=23
+		^reuse(HAPPINESS)
+	}
+
+

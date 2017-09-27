@@ -1,0 +1,25 @@
+topic: ~physical_conclusion repeat keep []
+
+u: RESULTS (* mostra risultati * )
+	if ($score<6){
+		Dalle risposte risulta che sei inattivo. Se possibile dovresti incrementare la tua attività fisica.
+	}else if ($score>=6 AND $score<12){
+		Dalle risposte risulta che sei mediamente attivo. La tua attività fisica è sufficientemente attiva.
+	}else{
+		Dalle risposte risulta che sei molto o estremamente attivo.
+	}
+	$_responses = ^jsoncreate(array)
+    ^jsonarrayinsert($_responses "Proseguiamo")
+    $USER.buttons = $_responses
+
+u: GO_AHEAD (* proseguiamo *)
+	if ($mental_done==1){
+		La simulazione si e' conclusa. Grazie per aver partecipato.👋
+		$USER.status = 2
+		$_responses = ^jsoncreate(array)
+	    ^jsonarrayinsert($_responses "Prego! 🙂")
+	    $USER.buttons = $_responses	
+	}else{
+		$USER.first_half = 1
+		^respond(~mental_wellbeing)
+	}

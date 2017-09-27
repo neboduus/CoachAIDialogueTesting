@@ -1,0 +1,93 @@
+outputmacro: ^remains_to_profile(^mental ^physical)
+	if (^mental==0){
+			Benessere 😇
+		}
+	if (^mental==0 AND ^physical==0){
+		e
+	}
+	if (^physical==0){
+		Attivita' Fisica 🏋️
+	}
+	
+	
+	
+outputmacro: ^set_buttons_on_return_profilation(^mental ^physical)
+	$_responses = ^jsoncreate(array)
+	if (^mental==0){
+		^jsonarrayinsert($_responses "Benessere 😇")
+	}
+	if (^physical==0){
+		^jsonarrayinsert($_responses "Attivita Fisica")
+	}
+	$USER.buttons = $_responses
+
+outputmacro: ^flag_on_profiling_done(^mental ^physical)
+	$_tmp = 1
+	if (^mental==0){
+		$_tmp = 0
+	}else if (^physical==0){
+		$_tmp = 0
+	}
+	if($_tmp==1){
+		$state=1
+	}else{
+		$state=0
+	}
+
+
+outputmacro: ^calculate_physical_default()
+	if($physical==2 OR $physical==3){
+		$physical=1
+	}else if($physical==5){
+		$physical=4
+	}else if($physical==7){
+		$physical=6
+	}else if($physical==9){
+		$physical=8
+	}else if($physical==11){
+		$physical=10
+	}else if($physical==13){
+		$physical=12
+	}else if($physical==15){
+		$physical=14
+	}else if($physical==17){
+		$physical=16
+	}else if($physical==19){
+		$physical=18
+	}else if($physical==21){
+		$physical=20
+	}else if($physical==23){
+		$physical=22
+	}else if($physical==25){
+		$physical=24
+	}
+
+
+outputmacro: ^calculate_mental_default()
+	if ($mental==1){
+		$mental=0
+	}else if($mental==2){
+		$mental=1
+	}else if($mental==4){
+		$mental=3
+	}else if($mental==6){
+		$mental=5
+	}else if($mental==8){
+		$mental=7
+	}else if($mental==10){
+		$mental=9
+	}else if($mental==12){
+		$mental=11
+	}else if($mental==14){
+		$mental=13
+	}else if($mental==16){
+		$mental=15
+	}else if($mental==18){
+		$mental=17
+	}else if($mental==20){
+		$mental=19
+	}else if($mental==22){
+		$mental=21
+	}else if($mental==24){
+		$mental=23
+	}

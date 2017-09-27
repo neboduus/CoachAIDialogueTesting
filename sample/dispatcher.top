@@ -1,0 +1,12 @@
+topic: ~dispatcher []
+
+u: START ()
+	$profilation = 0
+	$mental = 0
+	$physical = 0
+	$score = 0
+	$score2 = 0
+	$physical_done = 0
+	$mental_done = 0
+	^addtopic(~physical)
+	^respond(~physical)

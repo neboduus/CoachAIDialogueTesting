@@ -1,0 +1,423 @@
+topic: ~physical keep repeat []
+
+u: INTRO ($physical=0 * ~next * )
+	Ciao! Sono un assistente personale e ora ti farò ora alcune domande sulla tua attività fisica. Iniziamo?
+	$_responses = ^jsoncreate(array)
+    ^jsonarrayinsert($_responses "Avanti ")
+    $USER.buttons = $_responses
+	$physical=1
+	
+
+u: HEAVY_PHYSICAL_ACTIVITY ($physical=1 * avanti *)
+	Fai un lavoro che prevede attività fisica intensa, come trasportare carichi pesanti o eseguire lavori edili?
+
+	$_responses = ^jsoncreate(array)
+    ^jsonarrayinsert($_responses "Si ")
+    ^jsonarrayinsert($_responses "Solo occasionalmente ")
+    ^jsonarrayinsert($_responses "Quasi mai ")
+    ^jsonarrayinsert($_responses "Non voglio rispondere ")
+    $USER.buttons = $_responses
+	$physical=2
+
+u: ($physical=2 * si *)
+	$physical=4
+	$score += 3
+	^reuse(LIGHT_PHYSICAL_ACTIVITY)
+
+u: ($physical=2 * solo occasionalmente *)
+	$physical=4
+	$score += 2
+	^reuse(LIGHT_PHYSICAL_ACTIVITY)
+
+u: ($physical=2 * quasi mai *)
+	$physical=4
+	^reuse(LIGHT_PHYSICAL_ACTIVITY)
+
+u: ($physical=2 * non voglio rispondere *)
+	$physical=4
+	^reuse(LIGHT_PHYSICAL_ACTIVITY)
+
+
+u: LIGHT_PHYSICAL_ACTIVITY ($physical=4)
+	Il tuo lavoro prevede attività fisica moderata, come camminare con un’andatura rapida o trasportare carichi leggeri?
+	
+	$_responses = ^jsoncreate(array)
+    ^jsonarrayinsert($_responses "Si, spesso ")
+    ^jsonarrayinsert($_responses "Qualche volta ")
+    ^jsonarrayinsert($_responses "No, sono spesso seduto ")
+    ^jsonarrayinsert($_responses "Preferisco non rispondere ")
+
+    $USER.buttons = $_responses
+    $physical=5
+
+u: ($physical=5 * si * spesso *)
+	$physical=6
+	$score += 2
+	^reuse(PHYSICAL_TIME)
+
+
+u: ($physical=5 * qualche volta * )
+	$physical=6
+	$score += 1
+	^reuse(PHYSICAL_TIME)
+
+u: ($physical=5 * no * seduto * )
+	$physical=6
+	^reuse(PHYSICAL_TIME)
+
+u: ($physical=5 * preferisco * )
+	$physical=6
+	^reuse(PHYSICAL_TIME)
+
+
+u: PHYSICAL_TIME ($physical=6)
+	Quanto tempo trascorri compiendo attività fisica in una normale giornata lavorativa?
+	$_responses = ^jsoncreate(array)
+    ^jsonarrayinsert($_responses "Più di 6 ore ")
+    ^jsonarrayinsert($_responses "Tra 3 e 6 ore ")
+    ^jsonarrayinsert($_responses "Meno di 3 ore ")
+    ^jsonarrayinsert($_responses "Non lo so ")
+    $USER.buttons = $_responses
+	$physical=7
+
+u: ($physical=7 * {più piu} di 6 *)
+	$physical=8
+	$score += 3
+	^reuse(BYCICLE)
+
+u: ($physical=7  * tra 3 * 6 ore *)
+	$physical=8
+	$score += 1
+	^reuse(BYCICLE)
+
+u: ($physical=7  * meno di 3 ore *)
+	$physical=8
+	^reuse(BYCICLE)
+
+u: ($physical=7  * non lo so *)
+	$physical=8
+	^reuse(BYCICLE)
+
+u: BYCICLE ($physical=8)
+	Quando ti sposti da un posto all’altro, usi la bicicletta per almeno dieci minuti?
+	
+	$_responses = ^jsoncreate(array)
+    ^jsonarrayinsert($_responses "Si spesso ")
+    ^jsonarrayinsert($_responses "A volte ")
+    ^jsonarrayinsert($_responses "Mai o quasi mai ")
+    ^jsonarrayinsert($_responses "Preferisco non rispondere ")
+
+    $USER.buttons = $_responses	
+	$physical=9
+
+u: ($physical=9 * spesso * )
+	$physical=10
+	$score += 2
+	^reuse(WALK_STEPS)
+
+u: ($physical=9 * a volte * )
+	$physical=10
+	$score += 1
+	^reuse(WALK_STEPS)
+
+u: ($physical=9 * quasi mai * )
+	$physical=10
+	^reuse(WALK_STEPS)
+
+u: ($physical=9 * preferisco non rispondere * )
+	$physical=10
+	^reuse(WALK_STEPS)
+
+u: WALK_STEPS ($physical=10) 
+	Che passo hai prevalentemente quando cammini?
+
+	$_responses = ^jsoncreate(array)
+    ^jsonarrayinsert($_responses "Passo intenso ")
+    ^jsonarrayinsert($_responses "Passo moderato ")
+    ^jsonarrayinsert($_responses "Passo leggero ")
+    ^jsonarrayinsert($_responses "Non lo so ")
+
+    $USER.buttons = $_responses	
+	$physical=11
+
+u: ($physical=11 * passo intenso * )
+	$physical=12
+	$score += 2
+	^reuse(HARD_SPORT)
+
+u: ($physical=11 * passo moderato * )
+	$physical=12
+	$score += 1
+	^reuse(HARD_SPORT)
+
+u: ($physical=11 * passo leggero * )
+	$physical=12
+	^reuse(HARD_SPORT)
+
+u: ($physical=11 * non lo so * )
+	$physical=12
+	^reuse(HARD_SPORT)
+
+u: HARD_SPORT ($physical=12) 
+	Nel tempo libero pratichi sport con forte accelerazione della respirazione o del battito cardiaco, come correre o giocare a calcio?
+
+	$_responses = ^jsoncreate(array)
+    ^jsonarrayinsert($_responses "No, mai ")
+    ^jsonarrayinsert($_responses "Qualche volta ")
+    ^jsonarrayinsert($_responses "Quasi ogni giorno ")
+    ^jsonarrayinsert($_responses "Non voglio rispondere ")
+    $USER.buttons = $_responses	
+	$physical=13
+
+u: ($physical=13 * mai * )
+	$physical=14
+	^reuse(LIGHT_SPORT)
+
+u: ($physical=13 * qualche volta * )
+	$physical=14
+	$score += 1
+	^reuse(LIGHT_SPORT)
+
+u: ($physical=13 * ogni giorno * )
+	$physical=14
+	$score += 3
+	^reuse(LIGHT_SPORT)
+
+u: ($physical=13 * non voglio rispondere * )
+	$physical=14
+	^reuse(LIGHT_SPORT)
+
+u: LIGHT_SPORT ($physical=14) 
+	Nel tempo libero pratichi attività fisica moderata, come andare in bicicletta, nuotare o giocare a pallavolo?
+
+	$_responses = ^jsoncreate(array)
+    ^jsonarrayinsert($_responses "Molto spesso ")
+    ^jsonarrayinsert($_responses "Qualche volta ")
+    ^jsonarrayinsert($_responses "Quasi mai ")
+    ^jsonarrayinsert($_responses "Non lo so ")
+
+    $USER.buttons = $_responses	
+	$physical=15
+
+u: ($physical=15 * spesso * )
+	$physical=16
+	$score += 2
+	^reuse(PHYSICAL_EXERCISES)
+
+u: ($physical=15 * qualche volta * )
+	$physical=16
+	$score += 1
+	^reuse(PHYSICAL_EXERCISES)
+
+u: ($physical=15 * mai * )
+	$physical=16
+	^reuse(PHYSICAL_EXERCISES)
+
+u: ($physical=15 * non lo so * )
+	$physical=16
+	^reuse(PHYSICAL_EXERCISES)
+
+u: PHYSICAL_EXERCISES ($physical=16) 
+	Quando spesso svolgi degli esercizi fisici?
+
+	$_responses = ^jsoncreate(array)
+    ^jsonarrayinsert($_responses "Più di tre volte a settimana ")
+    ^jsonarrayinsert($_responses "Da una a due volte a settimana ")
+    ^jsonarrayinsert($_responses "Mai o quasi mai ")
+    ^jsonarrayinsert($_responses "Non voglio rispondere ")
+    $USER.buttons = $_responses	
+	$physical=17
+
+u: ($physical=17 * tre volte a settimana * )
+	$physical=18
+	$score += 3
+	^reuse(REST_WORK_DAY)
+
+u: ($physical=17 * due volte a settimana * )
+	$physical=18
+	$score += 2
+	^reuse(REST_WORK_DAY)
+
+u: ($physical=17 * mai * )
+	$physical=18
+	^reuse(REST_WORK_DAY)
+
+u: ($physical=17 * non voglio rispondere * )
+	$physical=18
+	^reuse(REST_WORK_DAY)
+
+
+u: REST_WORK_DAY ($physical=18) 
+	Quanto tempo trascorri seduto o a riposo in una giornata normale lavorativa? 
+
+	$_responses = ^jsoncreate(array)
+    ^jsonarrayinsert($_responses "Gran parte della giornata ")
+    ^jsonarrayinsert($_responses "Tra 4 e 8 ore ")
+    ^jsonarrayinsert($_responses "Sono quasi sempre in piedi ")
+    ^jsonarrayinsert($_responses "Preferisco non rispondere ")
+    $USER.buttons = $_responses	
+	$physical=19
+
+u: ($physical=19 * gran parte della giornata * )
+	$physical=20
+	^reuse(DO_IT_YOURSELF)
+
+u: ($physical=19 * tra * ore * )
+	$physical=20
+	^reuse(DO_IT_YOURSELF)
+
+u: ($physical=19 * quasi sempre * )
+	$physical=20
+	$score += 1
+	^reuse(DO_IT_YOURSELF)
+
+u: ($physical=19 * non rispondere * )
+	$physical=20
+	^reuse(DO_IT_YOURSELF)
+
+u: DO_IT_YOURSELF ($physical=20) 
+	Fai attività fisiche come lavori “fai-da-te” o giardinaggio, in cui ti capita di usare molte energie? 
+
+	$_responses = ^jsoncreate(array)
+    ^jsonarrayinsert($_responses "Spesso ")
+    ^jsonarrayinsert($_responses "Solo qualche volta ")
+    ^jsonarrayinsert($_responses "Quasi mai ")
+    ^jsonarrayinsert($_responses "Preferisco non rispondere ")
+    $USER.buttons = $_responses	
+	$physical=21
+
+u: ($physical=21 * spesso * )
+	$physical=22
+	$score += 2
+	^reuse(REST_REST_DAY)
+
+u: ($physical=21 * qualche volta * )
+	$physical=22
+	$score += 1
+	^reuse(REST_REST_DAY)
+
+u: ($physical=21 * quasi mai * )
+	$physical=22
+	^reuse(REST_REST_DAY)
+
+u: ($physical=21 * non rispondere * )
+	$physical=22
+	^reuse(REST_REST_DAY)
+
+u: REST_REST_DAY ($physical=22) 
+	Quanto tempo in totale trascorri rimanendo seduto, durante un giorno di riposo, in cui non lavori?
+
+	$_responses = ^jsoncreate(array)
+    ^jsonarrayinsert($_responses "Quasi tutto il giorno ")
+    ^jsonarrayinsert($_responses "Tra 4 e 8 ore ")
+    ^jsonarrayinsert($_responses "Cerco di stare sempre in piedi ")
+    ^jsonarrayinsert($_responses "Non voglio rispondere ")
+    $USER.buttons = $_responses	
+	$physical=23
+
+u: ($physical=23 * tutto il giorno * )
+	$physical=24
+	^reuse(VEGETABLES)
+
+u: ($physical=23 * tra * ore * )
+	$physical=24
+	$score += 1
+	^reuse(VEGETABLES)
+
+u: ($physical=23 * sempre in piedi * )
+	$physical=24
+	$score += 2
+	^reuse(VEGETABLES)
+
+u: ($physical=23 * non voglio rispondere * )
+	$physical=24
+	^reuse(VEGETABLES)
+
+u: VEGETABLES ($physical=24) 
+	Quante porzioni di frutta o verdura consumi al giorno?
+
+	$_responses = ^jsoncreate(array)
+    ^jsonarrayinsert($_responses "Al massimo una di frutta/verdura ")
+    ^jsonarrayinsert($_responses "1 o 4 di frutta/verdura ")
+    ^jsonarrayinsert($_responses "Piu di 4 di frutta/verdura ")
+    ^jsonarrayinsert($_responses "Non voglio rispondere ")
+    $USER.buttons = $_responses	
+	$physical=25
+
+u: ($physical=25 * al massimo una * )
+	$physical=26
+	^reuse(FINISH_PHYSICAL)
+
+u: ($physical=25 * 1 * 4 * )
+	$physical=26
+	$score += 1
+	^reuse(FINISH_PHYSICAL)
+
+u: ($physical=25 * piu di * )
+	$physical=26
+	$score += 2
+	^reuse(FINISH_PHYSICAL)
+
+u: ($physical=25 * voglio rispondere * )
+	$physical=26
+	^reuse(FINISH_PHYSICAL)
+
+u: FINISH_PHYSICAL ($physical=26)
+	# set that topic was completed
+	Grazie delle informazioni. Ora ti presenteremo i risultati del questionario sul tuo stato di attività fisica.
+
+	$_responses = ^jsoncreate(array)
+    ^jsonarrayinsert($_responses "Mostra Risultati")
+
+    $USER.buttons = $_responses	
+    $physical=27
+    $physical_done = 1
+
+
+u: ($physical=27 * mostra risultati *)
+	^respond(~physical_conclusion)
+
+u: DEFAULT () 
+	# check user topic fullfilment state
+	if($physical==0 OR $physical==1){
+		^reuse(INTRO)
+	}else if($physical==2){
+		$physical=1
+		^reuse(HEAVY_PHYSICAL_ACTIVITY)
+	}else if($physical==5){
+		$physical=4
+		^reuse(LIGHT_PHYSICAL_ACTIVITY)
+	}else if($physical==7){
+		$physical=6
+		^reuse(PHYSICAL_TIME)
+	}else if($physical==9){
+		$physical=8
+		^reuse(BYCICLE)
+	}else if($physical==11){
+		$physical=10
+		^reuse(WALK_STEPS)
+	}else if($physical==13){
+		$physical=12
+		^reuse(HARD_SPORT)
+	}else if($physical==15){
+		$physical=14
+		^reuse(LIGHT_SPORT)
+	}else if($physical==17){
+		$physical=16
+		^reuse(PHYSICAL_EXERCISES)
+	}else if($physical==19){
+		$physical=18
+		^reuse(REST_WORK_DAY)
+	}else if($physical==21){
+		$physical=20
+		^reuse(DO_IT_YOURSELF)
+	}else if($physical==23){
+		$physical=22
+		^reuse(REST_REST_DAY)
+	}else if($physical==25){
+		$physical=24
+		^reuse(VEGETABLES)
+	}
+
+
+

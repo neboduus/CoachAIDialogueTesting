@@ -1,0 +1,16 @@
+topic: ~conclusion keep repeat []
+
+	
+u: RESULTS ()
+	if ($score2<14){
+		Dalle risposte risulta che non hai nessun problema nel tuo stato di benessere.
+	}else if ($score2>=14 AND $score2<18){
+		Dalle risposte risulta che c’è qualcosa che non va nel tuo stato di benessere. Potrebbe essere utile chiedere qualche consiglio.
+	}else{
+		Dalle risposte risulta che c’è qualcosa che non va nel tuo stato di benessere. Potrebbe essere utile chiedere aiuto e rivolgerti ad un esperto.
+	}
+
+	$_responses = ^jsoncreate(array)
+    ^jsonarrayinsert($_responses "Concludiamo! 🙂")
+    $USER.buttons = $_responses	
+	$USER.status = 2
